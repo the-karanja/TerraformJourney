@@ -28,9 +28,19 @@ resource "aws_s3_bucket" "terraform-bkt" {
 }
 //enable s3 bucket versioning
 resource "aws_s3_bucket_versioning" "enabled" {
-  bucket = "tform-bkt-66"
+  bucket = "tform-bkt-66.id"
   versioning_configuration {
     status = "Enabled"
+  }
+}
+
+//enable server side enryption
+resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
+  bucket = "tform-bkt-66.id"
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
   }
 }
 resource "aws_security_group" "instance" {
