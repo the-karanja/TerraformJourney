@@ -26,6 +26,13 @@ resource "aws_s3_bucket" "terraform-bkt" {
     prevent_destroy = true
   }
 }
+//enable s3 bucket versioning
+resource "aws_s3_bucket_versioning" "enabled" {
+  bucket = "tform-bkt-66"
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
 resource "aws_security_group" "instance" {
   name = "terraform-security-group"
   
