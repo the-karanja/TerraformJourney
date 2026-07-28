@@ -43,6 +43,15 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
     }
   }
 }
+
+// block all inbound and outbound traffic to restrict access
+resource "aws_s3_bucket_public_access_block" "public_access" {
+    bucket = "tform-bkt-66.id"
+    block_public_acls = true
+    block_public_policy = true
+    ignore_public_acls = true
+    restrict_public_buckets = true
+}
 resource "aws_security_group" "instance" {
   name = "terraform-security-group"
   
