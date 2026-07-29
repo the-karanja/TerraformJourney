@@ -28,7 +28,7 @@ resource "aws_s3_bucket" "terraform-bkt" {
 }
 //enable s3 bucket versioning
 resource "aws_s3_bucket_versioning" "enabled" {
-  bucket = "tform-bkt-66.id"
+  bucket = aws_s3_bucket.terraform-bkt.id
   versioning_configuration {
     status = "Enabled"
   }
@@ -36,7 +36,7 @@ resource "aws_s3_bucket_versioning" "enabled" {
 
 //enable server side enryption
 resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
-  bucket = "tform-bkt-66.id"
+  bucket = aws_s3_bucket.terraform-bkt.id
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
@@ -46,11 +46,23 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
 
 // block all inbound and outbound traffic to restrict access
 resource "aws_s3_bucket_public_access_block" "public_access" {
-    bucket = "tform-bkt-66.id"
+    bucket = aws_s3_bucket.terraform-bkt.id
     block_public_acls = true
     block_public_policy = true
     ignore_public_acls = true
     restrict_public_buckets = true
+}
+
+//create a dynamodb table to be used to locking
+resource "aws_dynamodb_table" "terraform-locks" {
+  name = "tform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
 }
 resource "aws_security_group" "instance" {
   name = "terraform-security-group"
